@@ -82,8 +82,8 @@ def visualize_stock(symbol, period):
 
 st.title("국내 주식 뉴스 기반 추천 QA 챗봇")
 company_name = st.text_input("기업명을 입력하세요:")
-client_id = ""
-client_secret = ""
+client_id = "gPLyAEqy9ENxbExk8LJP"
+client_secret = "Ogu99du1xG"
 openai_key = st.text_input("OpenAI API Key", type="password")
 period = st.selectbox("조회 기간", ["일", "주", "월", "년"])
 
