@@ -1,5 +1,6 @@
 langchain
 langchain_community
+torch
 chromadb
 finance-datareader
 unstructured
