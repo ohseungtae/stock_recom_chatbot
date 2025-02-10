@@ -43,7 +43,7 @@ def create_embeddings(texts):
         encode_kwargs=encode_kwargs
     )
     # VectorDB에 저장
-    vectorstore = Chroma.from_documents(documents=splits, embedding=ko_embedding)
+    vectorstore = Chroma.from_documents(documents=texts, embedding=ko_embedding)
     return vector_store
 
 
