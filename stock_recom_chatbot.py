@@ -35,7 +35,15 @@ def process_news_data(news_items):
 
 def create_embeddings(texts):
     """openai embeddings 활용하여 뉴스 임베딩 생성 및 저장"""
-    vectorstore = Chroma.from_documents(documents=texts, embedding=OpenAIEmbeddings())
+    model_name = "jhgan/ko-sbert-nli"
+    encode_kwargs = {'normalize_embeddings': True}
+
+    ko_embedding = HuggingFaceEmbeddings(
+        model_name_or_path=model_name,  # 최신 버전에서는 model_name 대신 model_name_or_path 사용
+        encode_kwargs=encode_kwargs
+    )
+    # VectorDB에 저장
+    vectorstore = Chroma.from_documents(documents=splits, embedding=ko_embedding)
     return vector_store
 
 
