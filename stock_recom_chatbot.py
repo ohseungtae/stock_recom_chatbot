@@ -1,5 +1,15 @@
 import streamlit as st
-import FinanceDataReader as fdr
+import subprocess
+import sys
+
+# FinanceDataReader 설치 시도
+try:
+    import FinanceDataReader as fdr
+except ModuleNotFoundError:
+    st.warning("FinanceDataReader 라이브러리가 없습니다. 설치를 시도합니다...")
+    subprocess.run([sys.executable, "-m", "pip", "install", "finance-datareader"])
+    import FinanceDataReader as fdr  # 재시도
+
 import requests
 import torch
 import faiss
