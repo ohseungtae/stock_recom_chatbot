@@ -1,7 +1,6 @@
 import streamlit as st
 import requests
 import torch
-import chromadb
 import pandas as pd
 import mplfinance as mpf
 from loguru import logger
