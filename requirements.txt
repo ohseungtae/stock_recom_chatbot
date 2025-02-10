@@ -2,7 +2,6 @@ langchain
 langchain_community
 chromadb
 finance-datareader
-faiss==1.5.3
 unstructured
 transformers
 tiktoken
