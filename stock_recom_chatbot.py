@@ -1,16 +1,18 @@
 import streamlit as st
-import FinanceDataReader as fdr
 import requests
 import torch
 import chromadb
+import pandas as pd
+import mplfinance as mpf
+from loguru import logger
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.chains import RetrievalQA
-from langchain.llms import OpenAI
+from langchain.chains import RetrievalQA, ConversationalRetrievalChain
+from langchain.chat_models import ChatOpenAI
+from langchain.memory import ConversationBufferMemory
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import mplfinance as mpf
-import pandas as pd
+import FinanceDataReader as fdr
 
 
 def get_news(company_name, client_id, client_secret):
@@ -48,7 +50,7 @@ def retrieve_relevant_sentences(query, vector_store):
 
 def generate_summary(query, context, openai_key):
     """GPT-4를 활용하여 요약 생성"""
-    llm = OpenAI(model_name="gpt-4", openai_api_key=openai_key)
+    llm = ChatOpenAI(openai_api_key=openai_key, model_name='gpt-4', temperature=0)
     qa_chain = RetrievalQA(llm=llm, retriever=context)
     return qa_chain.run(query)
 
@@ -79,14 +81,17 @@ def visualize_stock(symbol, period):
     mpf.plot(df, type='candle', style='charles', title=f"{symbol} 주가 ({period})", volume=True)
 
 
-st.title("국내 주식 뉴스 기반 추천 챗봇")
+st.title("국내 주식 뉴스 기반 추천 QA 챗봇")
 company_name = st.text_input("기업명을 입력하세요:")
-client_id = "gPLyAEqy9ENxbExk8LJP"
-client_secret = "Ogu99du1xG"
+client_id = ""
+client_secret = ""
 openai_key = st.text_input("OpenAI API Key", type="password")
 period = st.selectbox("조회 기간", ["일", "주", "월", "년"])
 
 if st.button("검색"):
+    if not openai_key:
+        st.info("OpenAI API 키를 입력해주세요.")
+        st.stop()
     news_items = get_news(company_name, client_id, client_secret)
     if news_items:
         st.subheader("최신 뉴스 및 감성 분석 결과")
@@ -94,13 +99,10 @@ if st.button("검색"):
         vector_store = create_embeddings(processed_texts)
         context = retrieve_relevant_sentences(company_name, vector_store)
         summary = generate_summary(company_name, context, openai_key)
-
         st.write("요약 정보:", summary)
-
         for news in news_items:
             sentiment = analyze_sentiment(news['title'] + " " + news['description'])
             st.write(f"[{news['title']}]({news['link']}) - 감성 분석: {sentiment}")
-
         st.subheader("주가 트렌드")
         symbol = fdr.StockListing("KRX")[fdr.StockListing("KRX")["Name"] == company_name]["Code"].values
         if len(symbol) > 0:
