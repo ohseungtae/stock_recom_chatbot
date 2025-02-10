@@ -12,7 +12,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import FinanceDataReader as fdr
-
+from langchain_openai import OpenAIEmbeddings
 
 def get_news(company_name, client_id, client_secret):
     """네이버 뉴스 API를 사용하여 최신 뉴스 가져오기"""
@@ -34,9 +34,8 @@ def process_news_data(news_items):
 
 
 def create_embeddings(texts):
-    """KoBERT를 활용하여 뉴스 임베딩 생성 및 저장"""
-    embeddings = HuggingFaceEmbeddings(model_name="skt/kobert-base-v1")
-    vector_store = Chroma.from_texts(texts, embeddings)
+    """openai embeddings 활용하여 뉴스 임베딩 생성 및 저장"""
+    vectorstore = Chroma.from_documents(documents=texts, embedding=OpenAIEmbeddings())
     return vector_store
 
 
