@@ -2,10 +2,9 @@ import streamlit as st
 import FinanceDataReader as fdr
 import requests
 import torch
-import faiss
 import chromadb
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS, Chroma
+from langchain.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
@@ -36,7 +35,7 @@ def process_news_data(news_items):
 def create_embeddings(texts):
     """KoBERT를 활용하여 뉴스 임베딩 생성 및 저장"""
     embeddings = HuggingFaceEmbeddings(model_name="skt/kobert-base-v1")
-    vector_store = FAISS.from_texts(texts, embeddings)
+    vector_store = Chroma.from_texts(texts, embeddings)
     return vector_store
 
 
