@@ -1,0 +1,10 @@
+langchain
+langchain_community
+chromadb
+FinanceDataReader
+faiss
+unstructured
+transformers
+tiktoken
+openai
+mplfinance
