@@ -12,3 +12,4 @@ openai
 mplfinance
 plotly
 loguru
+sentence-transformers
