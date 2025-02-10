@@ -13,3 +13,4 @@ mplfinance
 plotly
 loguru
 sentence-transformers
+blobfile
