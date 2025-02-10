@@ -39,7 +39,7 @@ def create_embeddings(texts):
     encode_kwargs = {'normalize_embeddings': True}
 
     ko_embedding = HuggingFaceEmbeddings(
-        model_name_or_path=model_name,  # 최신 버전에서는 model_name 대신 model_name_or_path 사용
+        model_name=model_name,  # 최신 버전에서는 model_name 대신 model_name_or_path 사용
         encode_kwargs=encode_kwargs
     )
     # VectorDB에 저장
