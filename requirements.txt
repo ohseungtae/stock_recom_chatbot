@@ -1,7 +1,7 @@
 langchain
 langchain_community
 chromadb
-subprocess
+finance-datareader
 faiss
 unstructured
 transformers
